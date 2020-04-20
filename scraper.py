@@ -1,6 +1,11 @@
-from bs4 import BeautifulSoup
-import EstablishmentListParser
+import json
 from urllib.request import urlopen
+
+from bs4 import BeautifulSoup
+
+import EstablishmentListParser
+import InspectionListParser
+from EstablishmentEncoder import EstablishmentEncoder
 
 
 def parse_inspections(link):
@@ -8,9 +13,16 @@ def parse_inspections(link):
     html_content = url_data.read()
     document = BeautifulSoup(html_content, "lxml")
     divs = EstablishmentListParser.get_establishment_divs(document)
+    establishments = []
     for establishment_div in divs:
         establishment = EstablishmentListParser.parse_establishment_div(establishment_div)
+        inspections = InspectionListParser.parse_inspection_reports(establishment.permit_id)
+        establishment.inspections = inspections
+        establishments.append(establishment)
         print(establishment)
+
+    with open("food_inspection_report.json", "w") as json_file:
+        json.dump(establishments, json_file, indent=2, cls=EstablishmentEncoder)
 
 
 def main():

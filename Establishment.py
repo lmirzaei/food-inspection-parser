@@ -10,7 +10,12 @@ class Establishment:
         self.city = city
         self.state = state
         self.zipcode = zipcode
+        self.inspections = []
 
     def __str__(self):
-        return "Permit ID: " + self.permit_id + " Name: " + self.name + " Address: " + self.address + " City: " + self.city + " State: " + self.state + " Zip code: " + str(
-            self.zipcode)
+        inspections_str = ""
+        for inspection in self.inspections:
+            inspections_str += "\t" + inspection.__str__() + "\n"
+
+        return "Permit ID: " + self.permit_id + "\nName: " + self.name + "\nAddress: " + self.address + "\nCity: " + self.city + "\nState: " + self.state + "\nZip code: " + str(
+            self.zipcode) + "\nInspections:\n" + inspections_str
